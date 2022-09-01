@@ -1,0 +1,4 @@
+server:
+  servlet:
+    context-path: /coupon
+    port: 8090
