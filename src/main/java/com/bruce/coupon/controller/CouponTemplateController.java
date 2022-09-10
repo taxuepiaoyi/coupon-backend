@@ -1,13 +1,12 @@
 package com.bruce.coupon.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.bruce.coupon.domain.CouponTemplateHttpInfo;
 import com.bruce.coupon.domain.PagedCouponTemplateHttpInfo;
 import com.bruce.coupon.domain.query.TemplateHttpSearchParams;
 import com.bruce.coupon.service.CouponTemplateHttpService;
-import com.bruce.coupon.template.domain.CouponTemplateInfo;
-import com.bruce.coupon.template.domain.PagedCouponTemplateInfo;
-import com.bruce.coupon.template.domain.TemplateSearchParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +38,24 @@ public class CouponTemplateController {
 
     // 读取优惠券
     @GetMapping("/getTemplate")
+    @SentinelResource(value = "getTemplate" ,blockHandler = "getTemplateBlockHandler")
     public CouponTemplateHttpInfo getTemplate(@RequestParam("id") Long id) {
         log.info("Load template, id={}", id);
         return couponTemplateHttpService.loadTemplateInfo(id);
     }
+
+
+    /**
+     * 读取优惠券的降级方法
+     * @param id
+     * @param exception
+     * @return
+     */
+    public CouponTemplateHttpInfo getTemplateBlockHandler(Long id, BlockException exception){
+        log.info("Load getTemplateBlockHandler, id={}", id);
+        return null ;
+    }
+
 
     // 批量获取
     @GetMapping("/getBatch")
