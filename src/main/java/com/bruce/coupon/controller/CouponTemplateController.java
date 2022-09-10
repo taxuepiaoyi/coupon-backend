@@ -58,10 +58,17 @@ public class CouponTemplateController {
 
 
     // 批量获取
-    @GetMapping("/getBatch")
+    @GetMapping("/getTemplateInBatch")
+    @SentinelResource(value = "getTemplateInBatch" ,blockHandler = "getTemplateInBatchBlockHandler")
     public Map<Long, CouponTemplateHttpInfo> getTemplateInBatch(@RequestParam("ids") Collection<Long> ids) {
         log.info("getTemplateInBatch: {}", JSON.toJSONString(ids));
         return couponTemplateHttpService.getTemplateInfoMap(ids);
+    }
+
+    //批量获取优惠券的降级处理
+    private Map<Long,CouponTemplateHttpInfo> getTemplateInBatchBlockHandler(Collection<Long> ids, BlockException exception){
+        log.info("getTemplateInBatchBlockHandler限流了");
+        return Map.of() ;
     }
 
     // 搜索模板
